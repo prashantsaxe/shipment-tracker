@@ -1,0 +1,105 @@
+import React, { useState } from 'react'
+import { Link } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
+
+const Login = () => {
+  const [formData, setFormData] = useState({
+    email: '',
+    password: ''
+  })
+  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
+  
+  const { login } = useAuth()
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    })
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setError('')
+    setLoading(true)
+
+    const result = await login(formData.email, formData.password)
+    
+    if (!result.success) {
+      setError(result.message)
+    }
+    
+    setLoading(false)
+  }
+
+  return (
+    <div className="container" style={{
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      minHeight: '100vh'
+    }}>
+      <div className="card" style={{ width: '100%', maxWidth: '400px' }}>
+        <h2 style={{ textAlign: 'center', marginBottom: '2rem', color: '#007bff' }}>
+          📦 Shipment Tracker
+        </h2>
+        <h3 style={{ textAlign: 'center', marginBottom: '1.5rem' }}>Login</h3>
+        
+        {error && (
+          <div style={{
+            color: '#dc3545',
+            background: '#f8d7da',
+            border: '1px solid #f5c6cb',
+            padding: '0.75rem',
+            borderRadius: '4px',
+            marginBottom: '1rem'
+          }}>
+            {error}
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label className="form-label">Email</label>
+            <input
+              type="email"
+              name="email"
+              className="form-control"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">Password</label>
+            <input
+              type="password"
+              name="password"
+              className="form-control"
+              value={formData.password}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <button
+            type="submit"
+            className="btn btn-primary"
+            style={{ width: '100%', marginBottom: '1rem' }}
+            disabled={loading}
+          >
+            {loading ? 'Logging in...' : 'Login'}
+          </button>
+        </form>
+
+        <p style={{ textAlign: 'center' }}>
+          Don't have an account? <Link to="/register">Register here</Link>
+        </p>
+      </div>
+    </div>
+  )
+}
+
+export default Login
