@@ -19,7 +19,6 @@ export const AuthProvider = ({ children }) => {
     const token = localStorage.getItem('token')
     if (token) {
       api.defaults.headers.common['Authorization'] = `Bearer ${token}`
-      // Verify token by getting user profile
       api.get('/users/profile')
         .then(response => {
           setUser(response.data)
@@ -80,6 +79,7 @@ export const AuthProvider = ({ children }) => {
 
   const value = {
     user,
+    setUser,
     login,
     register,
     logout,

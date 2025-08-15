@@ -51,22 +51,53 @@ const Register = () => {
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
-      minHeight: '100vh'
+      minHeight: '100vh',
+      padding: '2rem'
     }}>
-      <div className="card" style={{ width: '100%', maxWidth: '400px' }}>
-        <h2 style={{ textAlign: 'center', marginBottom: '2rem', color: '#007bff' }}>
-          📦 Shipment Tracker
+      <div style={{
+        background: '#fff',
+        borderRadius: '1.5rem',
+        padding: '3rem',
+        width: '100%',
+        maxWidth: '450px',
+        boxShadow: '0 20px 60px rgba(0,0,0,0.15)',
+        border: '1px solid #e2e8f0'
+      }}>
+        <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+          <h1 style={{ 
+            fontSize: '2.5rem',
+            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            marginBottom: '0.5rem',
+            fontWeight: 'bold'
+          }}>
+            📦 Shipment Tracker
+          </h1>
+          <p style={{ color: '#718096', fontSize: '1rem' }}>
+            Join us to track and manage shipments
+          </p>
+        </div>
+        
+        <h2 style={{ 
+          textAlign: 'center', 
+          marginBottom: '2rem', 
+          color: '#2d3748',
+          fontSize: '1.75rem',
+          fontWeight: '600'
+        }}>
+          Create Account
         </h2>
-        <h3 style={{ textAlign: 'center', marginBottom: '1.5rem' }}>Register</h3>
         
         {error && (
           <div style={{
-            color: '#dc3545',
-            background: '#f8d7da',
-            border: '1px solid #f5c6cb',
-            padding: '0.75rem',
-            borderRadius: '4px',
-            marginBottom: '1rem'
+            color: '#c53030',
+            background: '#fed7d7',
+            border: '1px solid #fc8181',
+            padding: '1rem',
+            borderRadius: '0.5rem',
+            marginBottom: '1.5rem',
+            fontSize: '0.9rem'
           }}>
             {error}
           </div>
@@ -74,25 +105,27 @@ const Register = () => {
 
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label className="form-label">Name</label>
+            <label className="form-label">Full Name</label>
             <input
               type="text"
               name="name"
               className="form-control"
               value={formData.name}
               onChange={handleChange}
+              placeholder="Enter your full name"
               required
             />
           </div>
 
           <div className="form-group">
-            <label className="form-label">Email</label>
+            <label className="form-label">Email Address</label>
             <input
               type="email"
               name="email"
               className="form-control"
               value={formData.email}
               onChange={handleChange}
+              placeholder="Enter your email"
               required
             />
           </div>
@@ -105,7 +138,9 @@ const Register = () => {
               className="form-control"
               value={formData.password}
               onChange={handleChange}
+              placeholder="Create a password (min 6 characters)"
               required
+              minLength="6"
             />
           </div>
 
@@ -117,23 +152,48 @@ const Register = () => {
               className="form-control"
               value={formData.confirmPassword}
               onChange={handleChange}
+              placeholder="Confirm your password"
               required
+              minLength="6"
             />
           </div>
 
           <button
             type="submit"
             className="btn btn-primary"
-            style={{ width: '100%', marginBottom: '1rem' }}
+            style={{ 
+              width: '100%', 
+              marginBottom: '1.5rem',
+              padding: '1rem',
+              fontSize: '1rem',
+              fontWeight: '600'
+            }}
             disabled={loading}
           >
-            {loading ? 'Registering...' : 'Register'}
+            {loading ? (
+              <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
+                <div className="loading-spinner"></div>
+                Creating Account...
+              </span>
+            ) : 'Create Account'}
           </button>
         </form>
 
-        <p style={{ textAlign: 'center' }}>
-          Already have an account? <Link to="/login">Login here</Link>
-        </p>
+        <div style={{ textAlign: 'center' }}>
+          <p style={{ color: '#718096', fontSize: '0.9rem' }}>
+            Already have an account?{' '}
+            <Link 
+              to="/login" 
+              style={{ 
+                color: '#4299e1', 
+                textDecoration: 'none', 
+                fontWeight: '600' 
+              }}
+            >
+              Sign In
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   )

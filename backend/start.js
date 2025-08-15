@@ -1,12 +1,10 @@
 #!/usr/bin/env node
 
-// Quick start script for development
 const { spawn } = require('child_process');
 const path = require('path');
 
 console.log('🚀 Starting Shipment Tracker Backend...\n');
 
-// Check if .env file exists
 const fs = require('fs');
 const envPath = path.join(__dirname, '.env');
 
@@ -22,7 +20,6 @@ if (!fs.existsSync(envPath)) {
     process.exit(1);
 }
 
-// Start the server
 const server = spawn('node', ['server.js'], {
     stdio: 'inherit',
     cwd: __dirname
@@ -32,7 +29,6 @@ server.on('close', (code) => {
     console.log(`\n📦 Backend server exited with code ${code}`);
 });
 
-// Handle graceful shutdown
 process.on('SIGINT', () => {
     console.log('\n🛑 Shutting down backend server...');
     server.kill('SIGINT');

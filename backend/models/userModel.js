@@ -19,12 +19,26 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Please provide a password'],
         minlength: [6, 'Password must be at least 6 characters']
+    },
+    phone: {
+        type: String,
+        trim: true,
+        maxlength: [20, 'Phone number cannot be more than 20 characters']
+    },
+    company: {
+        type: String,
+        trim: true,
+        maxlength: [100, 'Company name cannot be more than 100 characters']
+    },
+    address: {
+        type: String,
+        trim: true,
+        maxlength: [200, 'Address cannot be more than 200 characters']
     }
 }, {
     timestamps: true
 });
 
-// Hash password before saving
 userSchema.pre('save', async function(next) {
     if (!this.isModified('password')) {
         next();
@@ -35,7 +49,6 @@ userSchema.pre('save', async function(next) {
     next();
 });
 
-// Compare password method
 userSchema.methods.matchPassword = async function(enteredPassword) {
     return await bcrypt.compare(enteredPassword, this.password);
 };

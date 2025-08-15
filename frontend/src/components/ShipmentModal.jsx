@@ -55,10 +55,8 @@ const ShipmentModal = ({ shipment, onClose, onSaved }) => {
       }
 
       if (shipment) {
-        // Update existing shipment
         await api.put(`/shipments/${shipment._id}`, submitData)
       } else {
-        // Create new shipment
         await api.post('/shipments', submitData)
       }
 
