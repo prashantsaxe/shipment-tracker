@@ -8,10 +8,15 @@ const app = express();
 // CORS configuration for production
 const corsOptions = {
   origin: [
-    "*"
+    "http://localhost:5173",
+    "http://localhost:3000", 
+    "https://shipment-tracker-xs4c.vercel.app",
+    "https://shipment-tracker-66r7qd4y1-streamsages-projects.vercel.app"
   ],
   credentials: true,
-  optionsSuccessStatus: 200
+  optionsSuccessStatus: 200,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'x-csrf-token']
 };
 
 app.use(cors(corsOptions));
