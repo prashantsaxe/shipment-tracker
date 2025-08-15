@@ -130,7 +130,7 @@ const Dashboard = () => {
             onClick={() => setShowStats(!showStats)}
             className="btn btn-secondary"
           >
-            {showStats ? '📊 Hide Stats' : '📊 Show Stats'}
+            {showStats ? 'Hide Stats' : 'Show Stats'}
           </button>
           <button
             onClick={handleCreateShipment}
