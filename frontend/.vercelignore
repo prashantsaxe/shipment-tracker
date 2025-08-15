@@ -1,0 +1,59 @@
+# Vercel ignore file for frontend
+
+# Environment files (except .env.production)
+.env
+.env.local
+.env.development
+.env.test
+
+# Node modules
+node_modules/
+
+# Development files
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Editor directories and files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Build tools
+.nyc_output
+.grunt
+
+# Coverage directory used by tools like istanbul
+coverage/
+
+# Dependency directories
+jspm_packages/
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Documentation
+README.md
+docs/
+
+# Test files
+src/**/*.test.js
+src/**/*.test.jsx
+src/**/*.spec.js
+src/**/*.spec.jsx
