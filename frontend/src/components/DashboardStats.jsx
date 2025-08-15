@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import api from '../utils/api'
 
-const DashboardStats = () => {
+const DashboardStats = ({ refreshTrigger }) => {
   const [stats, setStats] = useState(null)
   const [loading, setLoading] = useState(true)
 
@@ -9,8 +9,16 @@ const DashboardStats = () => {
     fetchStats()
   }, [])
 
+  // Refresh stats when refreshTrigger changes
+  useEffect(() => {
+    if (refreshTrigger > 0) {
+      fetchStats()
+    }
+  }, [refreshTrigger])
+
   const fetchStats = async () => {
     try {
+      setLoading(true)
       const response = await api.get('/shipments/stats')
       setStats(response.data)
     } catch (error) {
@@ -52,11 +60,11 @@ const DashboardStats = () => {
 
   return (
     <div>
-      <div style={{ 
-        display: 'grid', 
-        gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', 
-        gap: '1.5rem', 
-        marginBottom: '2rem' 
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+        gap: '1.5rem',
+        marginBottom: '2rem'
       }}>
         <div style={{
           background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
@@ -124,16 +132,16 @@ const DashboardStats = () => {
           border: '1px solid #e2e8f0'
         }}>
           <h4 style={{ marginBottom: '1rem', color: '#2d3748', fontSize: '1.25rem' }}>
-            💰 Financial Overview
+            Financial Overview
           </h4>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.5rem 0' }}>
               <span style={{ color: '#4a5568' }}>Total Estimated Cost:</span>
-              <strong style={{ color: '#2d3748' }}>${financial.totalCost?.toFixed(2) || '0.00'}</strong>
+              <strong style={{ color: '#2d3748' }}>₹{financial.totalCost?.toFixed(2) || '0.00'}</strong>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.5rem 0' }}>
               <span style={{ color: '#4a5568' }}>Average Cost:</span>
-              <strong style={{ color: '#2d3748' }}>${financial.averageCost?.toFixed(2) || '0.00'}</strong>
+              <strong style={{ color: '#2d3748' }}>₹{financial.averageCost?.toFixed(2) || '0.00'}</strong>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.5rem 0' }}>
               <span style={{ color: '#4a5568' }}>Total Distance:</span>
@@ -150,7 +158,7 @@ const DashboardStats = () => {
           border: '1px solid #e2e8f0'
         }}>
           <h4 style={{ marginBottom: '1rem', color: '#2d3748', fontSize: '1.25rem' }}>
-            🎯 Priority Breakdown
+            Priority Breakdown
           </h4>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.5rem 0' }}>
@@ -182,11 +190,11 @@ const DashboardStats = () => {
           border: '1px solid #e2e8f0'
         }}>
           <h4 style={{ marginBottom: '1rem', color: '#2d3748', fontSize: '1.25rem' }}>
-            📦 Recent Shipments
+            Recent Shipments
           </h4>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
             {recentShipments.map((shipment) => (
-              <div 
+              <div
                 key={shipment._id}
                 style={{
                   display: 'flex',
@@ -213,12 +221,12 @@ const DashboardStats = () => {
                     borderRadius: '9999px',
                     fontSize: '0.75rem',
                     fontWeight: '600',
-                    background: shipment.status === 'DELIVERED' ? '#c6f6d5' : 
-                               shipment.status === 'IN_TRANSIT' ? '#bee3f8' :
-                               shipment.status === 'PENDING' ? '#fef5e7' : '#fed7d7',
-                    color: shipment.status === 'DELIVERED' ? '#2f855a' : 
-                           shipment.status === 'IN_TRANSIT' ? '#2b6cb0' :
-                           shipment.status === 'PENDING' ? '#b7791f' : '#c53030'
+                    background: shipment.status === 'DELIVERED' ? '#c6f6d5' :
+                      shipment.status === 'IN_TRANSIT' ? '#bee3f8' :
+                        shipment.status === 'PENDING' ? '#fef5e7' : '#fed7d7',
+                    color: shipment.status === 'DELIVERED' ? '#2f855a' :
+                      shipment.status === 'IN_TRANSIT' ? '#2b6cb0' :
+                        shipment.status === 'PENDING' ? '#b7791f' : '#c53030'
                   }}>
                     {shipment.status.replace('_', ' ')}
                   </span>

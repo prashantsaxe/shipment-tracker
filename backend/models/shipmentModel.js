@@ -79,30 +79,46 @@ const shipmentSchema = new mongoose.Schema({
 
 // Calculate estimated delivery days and cost before saving
 shipmentSchema.pre('save', function(next) {
-    const speed_factor = this.shipping_method === 'EXPRESS' ? 100 : 50;
-    const handling_days = 1;
+    // More realistic speed calculations (km per day)
+    const speed_factor = this.shipping_method === 'EXPRESS' ? 800 : 500; // Express: 800km/day, Standard: 500km/day
+    const handling_days = this.shipping_method === 'EXPRESS' ? 0.5 : 1; // Express processes faster
     
-    // Calculate delivery days
-    this.estimated_delivery_days = Math.ceil((this.distance_km / speed_factor) + handling_days);
+    // Calculate delivery days (more realistic)
+    this.estimated_delivery_days = Math.max(1, Math.ceil((this.distance_km / speed_factor) + handling_days));
     
-    // Calculate estimated cost based on distance, weight, method, and priority
-    let base_rate = 0.5; // Base rate per km
-    let weight_multiplier = Math.max(1, this.weight_kg * 0.1);
-    let method_multiplier = this.shipping_method === 'EXPRESS' ? 1.5 : 1;
+    // Realistic cost calculation (Indian market rates)
+    let base_rate_per_kg = 8; // ₹8 per kg as base rate
+    let distance_rate = 0.15; // ₹0.15 per km per kg
+    
+    // Weight-based pricing (minimum 0.5kg for calculation)
+    let chargeable_weight = Math.max(0.5, this.weight_kg);
+    
+    // Method multipliers
+    let method_multiplier = this.shipping_method === 'EXPRESS' ? 1.8 : 1;
+    
+    // Priority multipliers
     let priority_multiplier = 1;
-    
     switch(this.priority) {
-        case 'HIGH': priority_multiplier = 1.3; break;
-        case 'URGENT': priority_multiplier = 1.6; break;
-        case 'LOW': priority_multiplier = 0.8; break;
+        case 'HIGH': priority_multiplier = 1.2; break;
+        case 'URGENT': priority_multiplier = 1.5; break;
+        case 'LOW': priority_multiplier = 0.9; break;
         default: priority_multiplier = 1;
     }
     
-    let fragile_fee = this.is_fragile ? 10 : 0;
+    // Distance-based pricing tiers (more economical for longer distances)
+    let distance_multiplier = 1;
+    if (this.distance_km > 1000) distance_multiplier = 0.8;
+    else if (this.distance_km > 500) distance_multiplier = 0.9;
     
-    this.estimated_cost = Math.round(
-        (this.distance_km * base_rate * weight_multiplier * method_multiplier * priority_multiplier + fragile_fee) * 100
-    ) / 100;
+    // Additional charges
+    let fragile_fee = this.is_fragile ? (chargeable_weight * 5) : 0; // ₹5 per kg for fragile
+    let fuel_surcharge = (base_rate_per_kg + (this.distance_km * distance_rate)) * 0.1; // 10% fuel surcharge
+    
+    // Final calculation
+    let base_cost = (base_rate_per_kg * chargeable_weight) + (this.distance_km * distance_rate * chargeable_weight);
+    let total_cost = base_cost * method_multiplier * priority_multiplier * distance_multiplier + fragile_fee + fuel_surcharge;
+    
+    this.estimated_cost = Math.round(total_cost * 100) / 100;
     
     // Generate tracking number if not exists
     if (!this.tracking_number) {

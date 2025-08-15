@@ -16,6 +16,7 @@ const Dashboard = () => {
   const [showQuickStatus, setShowQuickStatus] = useState(false)
   const [statusUpdateShipment, setStatusUpdateShipment] = useState(null)
   const [showStats, setShowStats] = useState(true)
+  const [statsRefreshTrigger, setStatsRefreshTrigger] = useState(0)
   const [filters, setFilters] = useState({
     status: 'all',
     search: '',
@@ -69,6 +70,8 @@ const Dashboard = () => {
       try {
         await api.delete(`/shipments/${shipmentId}`)
         fetchShipments()
+        // Trigger stats refresh
+        setStatsRefreshTrigger(prev => prev + 1)
       } catch (error) {
         console.error('Error deleting shipment:', error)
         alert('Failed to delete shipment')
@@ -79,6 +82,8 @@ const Dashboard = () => {
   const handleShipmentSaved = () => {
     setShowModal(false)
     fetchShipments()
+    // Trigger stats refresh
+    setStatsRefreshTrigger(prev => prev + 1)
   }
 
   const handleGetPackingInstructions = async (shipment) => {
@@ -111,6 +116,8 @@ const Dashboard = () => {
     setShowQuickStatus(false)
     setStatusUpdateShipment(null)
     fetchShipments()
+    // Trigger stats refresh
+    setStatsRefreshTrigger(prev => prev + 1)
   }
 
   const handleFilterChange = (newFilters) => {
@@ -179,7 +186,7 @@ const Dashboard = () => {
 
       {showStats && (
         <div style={{ marginBottom: '2rem' }}>
-          <DashboardStats />
+          <DashboardStats refreshTrigger={statsRefreshTrigger} />
         </div>
       )}
 

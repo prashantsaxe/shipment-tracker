@@ -9,7 +9,7 @@ const PackingInstructionsModal = ({ data, onClose }) => {
     <div className="modal">
       <div className="modal-content" style={{ maxWidth: '600px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-          <h3>🤖 AI Packing Instructions</h3>
+          <h3>AI Packing Instructions</h3>
           <button 
             onClick={onClose}
             style={{ 

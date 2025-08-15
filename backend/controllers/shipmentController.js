@@ -6,7 +6,18 @@ const { GoogleGenerativeAI } = require("@google/generative-ai");
 // @access  Private
 const createShipment = async (req, res) => {
     try {
-        const { description, status, is_fragile, origin, destination, distance_km, shipping_method } = req.body;
+        const { 
+            description, 
+            status, 
+            is_fragile, 
+            origin, 
+            destination, 
+            distance_km, 
+            shipping_method,
+            weight_kg,
+            priority,
+            notes
+        } = req.body;
 
         if (!description || !origin || !destination || !distance_km) {
             return res.status(400).json({ message: 'Please provide all required fields' });
@@ -20,6 +31,9 @@ const createShipment = async (req, res) => {
             destination,
             distance_km,
             shipping_method: shipping_method || 'STANDARD',
+            weight_kg: weight_kg || 1,
+            priority: priority || 'NORMAL',
+            notes: notes || '',
             user: req.user._id
         });
 
@@ -118,7 +132,18 @@ const updateShipment = async (req, res) => {
             return res.status(401).json({ message: 'Not authorized' });
         }
 
-        const { description, status, is_fragile, origin, destination, distance_km, shipping_method } = req.body;
+        const { 
+            description, 
+            status, 
+            is_fragile, 
+            origin, 
+            destination, 
+            distance_km, 
+            shipping_method,
+            weight_kg,
+            priority,
+            notes
+        } = req.body;
 
         shipment.description = description || shipment.description;
         shipment.status = status || shipment.status;
@@ -127,6 +152,9 @@ const updateShipment = async (req, res) => {
         shipment.destination = destination || shipment.destination;
         shipment.distance_km = distance_km || shipment.distance_km;
         shipment.shipping_method = shipping_method || shipment.shipping_method;
+        shipment.weight_kg = weight_kg || shipment.weight_kg;
+        shipment.priority = priority || shipment.priority;
+        shipment.notes = notes !== undefined ? notes : shipment.notes;
 
         const updatedShipment = await shipment.save();
         res.json(updatedShipment);

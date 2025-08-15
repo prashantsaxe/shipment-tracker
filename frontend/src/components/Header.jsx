@@ -31,7 +31,7 @@ const Header = () => {
           fontSize: '1.5rem',
           fontWeight: 'bold'
         }}>
-          📦 Shipment Tracker
+          Shipment Tracker
         </h1>
         
         <nav style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
