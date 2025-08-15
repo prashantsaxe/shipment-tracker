@@ -10,7 +10,7 @@ const corsOptions = {
   origin: process.env.CLIENT_URL || [
     'http://localhost:5173',
     'http://localhost:3000',
-    'https://your-frontend-app.vercel.app' // Update this with your actual frontend URL
+    'https://shipment-tracker-66r7qd4y1-streamsages-projects.vercel.app/api'
   ],
   credentials: true,
   optionsSuccessStatus: 200
