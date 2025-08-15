@@ -7,10 +7,8 @@ const app = express();
 
 // CORS configuration for production
 const corsOptions = {
-  origin: process.env.CLIENT_URL || [
-    'http://localhost:5173',
-    'http://localhost:3000',
-    'https://shipment-tracker-66r7qd4y1-streamsages-projects.vercel.app/api'
+  origin: [
+    "*"
   ],
   credentials: true,
   optionsSuccessStatus: 200
