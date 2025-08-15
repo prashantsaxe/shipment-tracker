@@ -7,27 +7,48 @@ const app = express();
 
 // CORS configuration for production
 const corsOptions = {
-  origin: [
-    "http://localhost:5173",
-    "http://localhost:3000", 
-    "https://shipment-tracker-xs4c.vercel.app",
-    "https://shipment-tracker-66r7qd4y1-streamsages-projects.vercel.app"
-  ],
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    const allowedOrigins = [
+      "http://localhost:5173",
+      "http://localhost:3000", 
+      "https://shipment-tracker-xs4c.vercel.app"
+    ];
+    
+    // Allow any Vercel preview deployment URLs
+    const isVercelPreview = origin.includes('shipment-tracker') && origin.includes('vercel.app');
+    
+    if (allowedOrigins.includes(origin) || isVercelPreview) {
+      return callback(null, true);
+    }
+    
+    console.log('CORS blocked origin:', origin);
+    return callback(new Error('Not allowed by CORS'));
+  },
   credentials: true,
   optionsSuccessStatus: 200,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'x-csrf-token']
+  allowedHeaders: ['Content-Type', 'Authorization', 'x-csrf-token', 'Accept', 'Origin', 'X-Requested-With']
 };
 
 app.use(cors(corsOptions));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
+// Handle preflight requests explicitly
+app.options('*', cors(corsOptions));
+
 // Security headers for production
 app.use((req, res, next) => {
   res.header('X-Content-Type-Options', 'nosniff');
   res.header('X-Frame-Options', 'DENY');
   res.header('X-XSS-Protection', '1; mode=block');
+  
+  // Additional CORS headers for better compatibility
+  res.header('Access-Control-Allow-Credentials', 'true');
+  
   next();
 });
 
