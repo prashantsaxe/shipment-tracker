@@ -214,16 +214,37 @@ const getPackingInstructions = async (req, res) => {
         const method = shipment.shipping_method.toLowerCase();
         const distance = shipment.distance_km;
         
-        const prompt = `Provide clear, concise packing instructions for a shipment with this description: "${shipment.description}". 
+        const prompt = `You are a professional logistics expert. Provide comprehensive packing instructions for a shipment: "${shipment.description}". 
         
-        Additional details:
-        - The item is ${fragility}
+        Shipment Details:
+        - Item: ${shipment.description}
+        - Fragility: ${fragility}
         - Shipping method: ${method}
         - Distance: ${distance} km
-        - Origin: ${shipment.origin}
-        - Destination: ${shipment.destination}
+        - Route: ${shipment.origin} → ${shipment.destination}
         
-        Give the instructions as a well-formatted, bulleted list with specific, actionable advice. Include recommendations for packaging materials, handling precautions, and any special considerations based on the item's characteristics.`;
+        Format your response using this exact structure with clear headers and bullet points:
+
+        ## Materials Needed
+        • List specific packaging materials required
+        • Include quantities and sizes where relevant
+        
+        ## Step-by-Step Packing Process
+        1. First step with detailed instructions
+        2. Second step with specific techniques
+        3. Continue with numbered steps
+        
+        ## Special Handling Requirements
+        • Any fragile item considerations
+        • Temperature or environmental requirements
+        • Orientation and positioning guidelines
+        
+        ## Final Quality Checks
+        • Items to verify before sealing
+        • Documentation requirements
+        • Label placement instructions
+        
+        Make your instructions specific, actionable, and professional. Consider the shipping method, distance, and item characteristics in your recommendations.`;
 
         // Call the API
         const result = await model.generateContent(prompt);
