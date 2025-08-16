@@ -2,7 +2,14 @@
   "name": "shipment-tracker-frontend",
   "private": true,
   "version": "1.0.0",
+  "description": "Modern React frontend for shipment tracking with AI-powered features",
   "type": "module",
+  "author": "Prashant Saxena <prashantsaxe@example.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/prashantsaxe/shipment-tracker.git"
+  },
   "engines": {
     "node": ">=18.0.0"
   },
